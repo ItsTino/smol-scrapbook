@@ -15,6 +15,19 @@ Best used for small groups or communities where content can be assumed acceptabl
 * Unlimited upload size
 * Simple delete functionality (To address accidental uploads)
 
+## Quick Start
+* Modify app/conf.php
+```php
+<?php
+$sitetitle = "smol-scrapbook";
+$sitename = "smol-scrapbook";
+$loginpassword = "change_me_please"
+?>
+```
+
+* Place app and public on webserver
+* Set vhost document root to public/
+* Set permissions for /media
 
 ## Technicals
 * Pure site requires only PHP
