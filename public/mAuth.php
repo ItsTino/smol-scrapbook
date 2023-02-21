@@ -4,9 +4,10 @@
 //Prompt user to retry authing
 //Set session variable on goodlogin
 require_once('../app/globalFuncs.php');
+require_once('../app/config.php');
 session_start();
 
-$currentPass = 'CHANGEME';
+$currentPass = $loginpassword;
 $tryPass = $_POST['password'];
 
 if ($tryPass === $currentPass) {
