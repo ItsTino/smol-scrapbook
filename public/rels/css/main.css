@@ -1,0 +1,7 @@
+div.credits {
+    position: fixed;
+    margin: auto;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
