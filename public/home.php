@@ -94,19 +94,21 @@ $other = array_reverse($other);
 </head>
 
 <body>
-  <main class="flex-shrink-0">
-    <div class="px-4 py-5 my-5 text-center">
-      <h1 class="display-5 fw-bold"><?=$sitetitle ?></h1>
-      <div class="col-lg-6 mx-auto">
-        <p class="lead mb-4">Files are listed in most recent upload order</p>
-        <a href="upload.php" class="btn btn-primary">I want to upload something.</a>
+<main class="flex-shrink-0">
+  <div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold mb-4"><?=$sitetitle ?></h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">Files are listed in most recent upload order</p>
+      <div class="mb-5">
+        <a href="upload.php" class="btn btn-primary me-2">I want to upload something.</a>
         <a href="delete.php" class="btn btn-danger">I want to delete something.</a>
+      </div>
 
-
-        <div class="d-flex justify-content-center">
-
-          <div>
-            <h3>Photos: <a href="gallery.php?type=images">View all photos</a></h3>
+      <div class="d-flex justify-content-center">
+        <div class="container">
+          <!-- Photos Section -->
+          <div class="mb-5">
+            <h3 class="mb-4">Photos: <a href="gallery.php?type=images">View all photos</a></h3>
             <div class="row row-cols-1 row-cols-md-3 g-4">
               <?php
               foreach ($images as $image) {
@@ -121,10 +123,11 @@ $other = array_reverse($other);
               }
               ?>
             </div>
-            
+          </div>
 
-
-            <h3>Videos: <a href="gallery.php?type=videos">View all videos</a></h3>
+          <!-- Videos Section -->
+          <div class="mb-5">
+            <h3 class="mb-4">Videos: <a href="gallery.php?type=videos">View all videos</a></h3>
             <div class="row row-cols-1 row-cols-md-3 g-4">
               <?php
               foreach ($videos as $videos) {
@@ -136,8 +139,11 @@ $other = array_reverse($other);
               }
               ?>
             </div>
+          </div>
 
-            <h3>Misc Files: <a href="gallery.php?type=other">View all misc</a></h3>
+          <!-- Misc Files Section -->
+          <div class="mb-5">
+            <h3 class="mb-4">Misc Files: <a href="gallery.php?type=other">View all misc</a></h3>
             <div class="row row-cols-1 row-cols-md-3 g-4">
               <?php
               foreach ($other as $other) {
@@ -154,8 +160,9 @@ $other = array_reverse($other);
           </div>
         </div>
       </div>
-      
-  </main>
+    </div>
+  </div>
+</main>
 
   <footer class="footer mt-auto py-3 bg-light">
     <center>
