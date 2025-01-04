@@ -7,3 +7,5 @@ public/rels/img/apple-touch-icon.png
 public/rels/img/android-chrome-192x192.png
 public/rels/img/android-chrome-512x512.png
 app/conf.php
+public/media/
+public/thumbs/
