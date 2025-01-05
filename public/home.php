@@ -114,7 +114,7 @@ $other = array_reverse($other);
               foreach ($images as $image) {
                 echo '<div class="col">';
                 echo '<div class="card h-100">';
-                echo '<img src="media/' . $image . '" class="card-img-top" alt="...">';
+                echo '<img src="thumbs/' . $image . '" class="card-img-top" alt="...">';
                 echo '<div class="card-body">';
                 echo '<h5 class="card-title"><a href="/media/' . $image . '">' . $image . '</a></h5>';
                 echo '</div>';

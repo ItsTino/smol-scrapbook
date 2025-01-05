@@ -14,20 +14,20 @@ $type = $_GET['type'];
 //Switch case to determine which type of file to display images, videos, or other, if it is not set redirect to home.php
 switch ($type) {
   case 'images':
-    //images
-    //Search through media folder for image files and generate hyperlink for them and display them
     $dir = "media/";
     $files = scandir($dir);
 
-    //Find all image files in $files
+    // Find all image files in $files
     $media = array();
     foreach ($files as $file) {
-      if (preg_match('/\.(jpg|jpeg|png|gif)$/', $file)) {
+      // Only include original images (exclude thumbnail files)
+      if (preg_match('/\.(jpg|jpeg|png|gif)$/', $file) && !strpos($file, '.png')) {
         array_push($media, $file);
       }
     }
-    //Reverse the order of the array so that the most recent images are displayed first
+    // Reverse the order of the array
     $media = array_reverse($media);
+    break;
 
     break;
   case 'videos':
@@ -81,7 +81,7 @@ switch ($type) {
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?=$sitetitle ?></title>
+  <title><?= $sitetitle ?></title>
 
   <link rel="apple-touch-icon" sizes="180x180" href="/rels/img/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/rels/img/favicon-32x32.png">
@@ -100,7 +100,7 @@ switch ($type) {
 <body>
   <main class="flex-shrink-0">
     <div class="px-4 py-5 my-5 text-center">
-      <h1 class="display-5 fw-bold"><?=$sitetitle ?></h1>
+      <h1 class="display-5 fw-bold"><?= $sitetitle ?></h1>
       <div class="col-lg-6 mx-auto">
         <p class="lead mb-4">Files are listed in most recent upload order</p>
         <a href="upload.php" class="btn btn-primary">I want to upload something.</a>
@@ -116,7 +116,70 @@ switch ($type) {
                 echo '<div class="col">';
                 echo '<div class="card h-100">';
                 if ($type == 'images') {
-                  echo '<img src="media/' . $media . '" class="card-img-top" alt="...">';
+                  // Check if thumbnail exists in thumbs directory
+                  $thumb_path = 'thumbs/' . pathinfo($media, PATHINFO_FILENAME);
+                  if (file_exists($thumb_path)) {
+                    // Display thumbnail that links to full image
+                    echo '<a href="media/' . $media . '">';
+                    echo '<img src="' . $thumb_path . '" class="card-img-top" alt="...">';
+                    echo '</a>';
+                  } else {
+                    // If thumbnail doesn't exist, create one
+                    $source_path = 'media/' . $media;
+
+                    // Get image type
+                    $image_info = getimagesize($source_path);
+                    $source_image = null;
+
+                    switch ($image_info[2]) {
+                      case IMAGETYPE_JPEG:
+                        $source_image = imagecreatefromjpeg($source_path);
+                        break;
+                      case IMAGETYPE_PNG:
+                        $source_image = imagecreatefrompng($source_path);
+                        break;
+                      case IMAGETYPE_GIF:
+                        $source_image = imagecreatefromgif($source_path);
+                        break;
+                    }
+
+                    if ($source_image) {
+                      // Get original dimensions
+                      $width = imagesx($source_image);
+                      $height = imagesy($source_image);
+
+                      // Calculate new dimensions
+                      $max_size = 150;
+                      if ($width > $height) {
+                        $new_width = $max_size;
+                        $new_height = floor($height * ($max_size / $width));
+                      } else {
+                        $new_height = $max_size;
+                        $new_width = floor($width * ($max_size / $height));
+                      }
+
+                      // Create and save thumbnail
+                      $thumbnail = imagecreatetruecolor($new_width, $new_height);
+                      imagealphablending($thumbnail, false);
+                      imagesavealpha($thumbnail, true);
+                      imagecopyresampled($thumbnail, $source_image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+                      imagepng($thumbnail, $thumb_path);
+
+                      // Display the newly created thumbnail
+                      echo '<a href="media/' . $media . '">';
+                      echo '<img src="' . $thumb_path . '" class="card-img-top" alt="...">';
+                      echo '</a>';
+
+                      // Clean up
+                      imagedestroy($thumbnail);
+                      imagedestroy($source_image);
+                    } else {
+                      // Fallback to original image if thumbnail creation fails
+                      echo '<a href="media/' . $media . '">';
+                      echo '<img src="media/' . $media . '" class="card-img-top" alt="...">';
+                      echo '</a>';
+                    }
+                  }
                 } else if ($type == 'videos') {
                   echo '<video class="card-img-top" controls>';
                   echo '<source src="media/' . $media . '" type="video/mp4">';
